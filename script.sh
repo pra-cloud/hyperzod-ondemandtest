@@ -29,6 +29,24 @@ check_docker() {
     fi
 }
 
+# Function to check if npm is installed and install it if not
+check_and_install_npm() {
+    if ! command -v npm &>/dev/null; then
+        echo "npm is not installed. Installing npm..."
+        if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            sudo apt-get update
+            sudo apt-get install npm
+        elif [[ "$OSTYPE" == "darwin"* ]]; then
+            brew install npm
+        fi
+    else
+        echo "npm is already installed."
+    fi
+}
+
+# Check if npm is installed and install if not
+check_and_install_npm
+
 # Check if Docker is installed and running
 check_docker
 
