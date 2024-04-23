@@ -29,32 +29,19 @@ check_docker() {
     fi
 }
 
-# Function to check if npm is installed and install it if not
-check_and_install_npm() {
-    if ! command -v npm &>/dev/null; then
-        echo "npm is not installed. Installing npm..."
-        if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-            sudo apt-get update
-            sudo apt-get install npm
-        elif [[ "$OSTYPE" == "darwin"* ]]; then
-            brew install npm
-        fi
-    else
-        echo "npm is already installed."
+# Check if npm is installed
+if ! command -v npm &>/dev/null; then
+    echo "npm is not installed. Skipping npm and wsl-open installation."
+else
+    # Check if wsl-open command is available
+    if ! command -v wsl-open &>/dev/null; then
+        echo "wsl-open is not installed. Installing wsl-open..."
+        install_wsl_open
     fi
-}
-
-# Check if npm is installed and install if not
-check_and_install_npm
+fi
 
 # Check if Docker is installed and running
 check_docker
-
-# Check if wsl-open command is available
-if ! command -v wsl-open &>/dev/null; then
-    echo "wsl-open is not installed. Installing..."
-    install_wsl_open
-fi
 
 # Pull the latest image
 docker pull hyperzoddevops/hyperzod-ondemand-test
@@ -70,5 +57,9 @@ docker run -d -p 5000:5000 --name hyperzod-container hyperzoddevops/hyperzod-ond
 
 sleep 5
 
-# Open localhost:5000 in a web browser using wsl-open
-wsl-open http://localhost:5000
+# Open localhost:5000 in a web browser using wsl-open if it's installed
+if command -v wsl-open &>/dev/null; then
+    wsl-open http://localhost:5000
+else
+    echo "wsl-open is not installed. You can manually open http://localhost:5000 in your web browser."
+fi
