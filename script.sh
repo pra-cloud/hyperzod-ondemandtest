@@ -7,9 +7,9 @@ remove_container() {
 }
 
 # Function to remove Docker image
-remove_image() {
-    docker image rm "$1" &> /dev/null
-}
+# remove_image() {
+#     docker image rm "$1" &> /dev/null
+# }
 
 # Function to install wsl-open if not installed
 install_wsl_open() {
@@ -50,7 +50,7 @@ docker pull hyperzoddevops/hyperzod-ondemand-test
 remove_container hyperzod-container
 
 # Remove any existing image
-remove_image hyperzoddevops/hyperzod-ondemand-test
+# remove_image hyperzoddevops/hyperzod-ondemand-test
 
 # Run the image, exposing port 5000
 docker run -d -p 5000:5000 --name hyperzod-container hyperzoddevops/hyperzod-ondemand-test
